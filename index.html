@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUAT 2025 Results Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Merriweather:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        
+        .serif {
+            font-family: 'Merriweather', serif;
+        }
+
+        .university-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 8rem;
+            color: rgba(0, 0, 0, 0.03);
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 0;
+            white-space: nowrap;
+        }
+
+        /* Print specific styles */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: white;
+            }
+            .shadow-xl {
+                box-shadow: none !important;
+            }
+            .border {
+                border: 1px solid #000 !important;
+            }
+        }
+        
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            background-color: #fef3c7;
+        }
+        
+        .ticker {
+            display: inline-block;
+            white-space: nowrap;
+            padding-right: 100%;
+            animation: ticker 30s linear infinite;
+        }
+        
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-800">
+
+    <!-- Admin/Demo Controls (For demonstration purposes) -->
+    <div class="bg-slate-900 text-white p-2 text-xs flex justify-between items-center no-print">
+        <span><i class="fas fa-tools mr-2"></i>Developer Demo Panel</span>
+        <div class="flex items-center gap-4">
+            <label class="flex items-center cursor-pointer">
+                <span class="mr-2 text-gray-400">Current Date:</span>
+                <span id="displayDate" class="font-mono text-yellow-400 font-bold">28/11/25</span>
+            </label>
+            <button onclick="toggleTimeJump()" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded transition-colors text-xs font-bold">
+                <i class="fas fa-clock mr-1"></i> Jump to Result Day (04/12/25)
+            </button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="university-header text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-blue-900 text-2xl font-bold border-4 border-blue-200">
+                        NU
+                    </div>
+                    <div class="text-center md:text-left">
+                        <h1 class="text-2xl md:text-3xl font-bold serif tracking-wide">National University</h1>
+                        <p class="text-blue-200 text-sm font-medium uppercase tracking-wider">Entrance Test (NUAT) 2025</p>
+                    </div>
+                </div>
+                <div class="text-right hidden md:block">
+                    <p class="text-sm text-blue-200">Exam Date: <strong>01/12/2025</strong></p>
+                    <p class="text-sm text-blue-200">Result Date: <strong>04/12/2025</strong></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <nav class="bg-blue-900/50 backdrop-blur-sm border-t border-blue-800/30">
+            <div class="container mx-auto px-4">
+                <ul class="flex flex-wrap justify-center md:justify-start gap-6 text-sm font-medium py-3">
+                    <li><a href="#" onclick="showSection('home')" class="hover:text-yellow-400 transition-colors flex items-center gap-2"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#" onclick="showSection('result')" class="hover:text-yellow-400 transition-colors flex items-center gap-2"><i class="fas fa-search"></i> Check Result</a></li>
+                    <li><a href="#" onclick="showSection('merit')" class="hover:text-yellow-400 transition-colors flex items-center gap-2"><i class="fas fa-list-ol"></i> Merit List</a></li>
+                    <li><a href="#" class="hover:text-yellow-400 transition-colors opacity-70 cursor-not-allowed">Counselling</a></li>
+                    <li><a href="#" class="hover:text-yellow-400 transition-colors opacity-70 cursor-not-allowed">Contact Helpdesk</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- News Ticker -->
+    <div class="ticker-wrap border-b border-yellow-200">
+        <div class="ticker text-yellow-900 py-2 text-sm font-semibold">
+            <span class="mx-4">IMPORTANT: NUAT 2025 Results scheduled for declaration on 04/12/2025.</span>
+            <span class="mx-4">•</span>
+            <span class="mx-4">Please keep your Roll Number and Date of Birth ready.</span>
+            <span class="mx-4">•</span>
+            <span class="mx-4">Technical Helpdesk: 1800-123-4567 (10 AM - 5 PM).</span>
+            <span class="mx-4">•</span>
+            <span class="mx-4">Counselling schedule will be released shortly after results.</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8">
+
+        <!-- Notification Banner -->
+        <div id="statusBanner" class="mb-8 p-4 rounded-lg bg-blue-50 border border-blue-200 flex items-start gap-3">
+            <i class="fas fa-info-circle text-blue-600 mt-1"></i>
+            <div>
+                <h3 class="font-bold text-blue-900">Result Status</h3>
+                <p id="statusText" class="text-blue-800 text-sm">Results are yet to be declared. Please check back on 04/12/25.</p>
+            </div>
+        </div>
+
+        <!-- HOME SECTION -->
+        <section id="homeSection" class="max-w-4xl mx-auto animate-fade-in">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-8 text-center">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-3xl mx-auto mb-6">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-slate-800 mb-4 serif">Welcome to NUAT 2025 Portal</h2>
+                    <p class="text-slate-600 mb-8 max-w-lg mx-auto">The official portal for National University Entrance Test results, scorecards, and merit lists.</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-6 text-left max-w-2xl mx-auto">
+                        <div onclick="showSection('result')" class="group cursor-pointer p-6 rounded-xl border border-slate-200 hover:border-blue-500 hover:shadow-md transition-all bg-slate-50 hover:bg-white">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="p-3 bg-blue-100 text-blue-600 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                    <i class="fas fa-file-alt text-xl"></i>
+                                </div>
+                                <i class="fas fa-arrow-right text-slate-300 group-hover:text-blue-500 transition-colors"></i>
+                            </div>
+                            <h3 class="font-bold text-lg mb-2">Download Scorecard</h3>
+                            <p class="text-sm text-slate-500">View and download your individual marksheet and rank card.</p>
+                        </div>
+
+                        <div onclick="showSection('merit')" class="group cursor-pointer p-6 rounded-xl border border-slate-200 hover:border-purple-500 hover:shadow-md transition-all bg-slate-50 hover:bg-white">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="p-3 bg-purple-100 text-purple-600 rounded-lg group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                                    <i class="fas fa-trophy text-xl"></i>
+                                </div>
+                                <i class="fas fa-arrow-right text-slate-300 group-hover:text-purple-500 transition-colors"></i>
+                            </div>
+                            <h3 class="font-bold text-lg mb-2">View Merit List</h3>
+                            <p class="text-sm text-slate-500">Check the top rankers and university-wide statistics.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-slate-50 p-6 border-t border-slate-200">
+                    <div class="flex items-center justify-center gap-2 text-sm text-slate-500">
+                        <i class="fas fa-lock"></i> Secure & Encrypted Portal
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESULT CHECK SECTION -->
+        <section id="resultSection" class="hidden max-w-2xl mx-auto">
+            <!-- Search Form -->
+            <div id="searchCard" class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+                <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                    <h2 class="font-bold text-lg text-slate-800"><i class="fas fa-search mr-2 text-blue-600"></i>Check Result</h2>
+                    <span class="text-xs font-mono bg-blue-100 text-blue-700 px-2 py-1 rounded">AY 2025-26</span>
+                </div>
+                
+                <div class="p-8">
+                    <!-- Date Blocker Message -->
+                    <div id="dateBlocker" class="text-center py-8">
+                        <div class="w-16 h-16 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Results Not Yet Declared</h3>
+                        <p class="text-slate-500 mb-6">The result link will be activated on <strong>04/12/2025</strong>.</p>
+                        <button onclick="toggleTimeJump()" class="text-blue-600 hover:underline text-sm font-medium">
+                            (Developer: Simulate Date to Dec 4th)
+                        </button>
+                    </div>
+
+                    <!-- Actual Form (Hidden initially if dates don't match) -->
+                    <form id="resultForm" class="hidden space-y-6" onsubmit="handleResultSearch(event)">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Roll Number <span class="text-red-500">*</span></label>
+                            <input type="text" id="rollNo" placeholder="Ex: 2500123" required
+                                class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                            >
+                            <p class="text-xs text-slate-500 mt-1">Enter the 7-digit roll number mentioned on your admit card.</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">Date of Birth</label>
+                                <input type="date" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none">
+                            </div>
+                        </div>
+
+                        <div class="pt-2">
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg shadow-md hover:shadow-lg transition-all transform active:scale-95 flex justify-center items-center gap-2">
+                                <span id="btnText">Get Result</span>
+                                <i id="btnSpinner" class="fas fa-spinner fa-spin hidden"></i>
+                            </button>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="button" onclick="autoFillDemo()" class="text-xs text-blue-500 hover:underline">
+                                Auto-fill Demo Data (Roll: 2500101)
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Result Marksheet Display -->
+            <div id="marksheetCard" class="hidden bg-white mt-8 shadow-xl print:shadow-none">
+                <div class="border-4 border-double border-slate-300 p-8 relative overflow-hidden">
+                    <div class="watermark serif">NUAT</div>
+                    
+                    <!-- Marksheet Header -->
+                    <div class="flex justify-between items-start border-b-2 border-slate-800 pb-6 mb-6 relative z-10">
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 border-2 border-slate-800 rounded-full flex items-center justify-center text-slate-800 font-bold text-xl">
+                                NU
+                            </div>
+                            <div>
+                                <h1 class="font-bold text-2xl serif text-slate-900 uppercase">National University</h1>
+                                <p class="text-sm font-bold text-slate-600 uppercase tracking-widest">Entrance Test (NUAT) - 2025</p>
+                                <p class="text-xs text-slate-500 mt-1">Exam Date: 01/12/25 • Result Date: 04/12/25</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="border border-slate-300 w-24 h-28 bg-slate-50 flex flex-col items-center justify-center text-slate-300 mb-1">
+                                <i class="fas fa-user text-3xl"></i>
+                                <span class="text-[10px] mt-1">Photo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Student Details -->
+                    <div class="grid grid-cols-2 gap-x-8 gap-y-4 mb-8 text-sm relative z-10">
+                        <div class="flex">
+                            <span class="font-bold w-32 text-slate-600">Candidate Name:</span>
+                            <span class="font-bold text-slate-900 uppercase" id="outName">--</span>
+                        </div>
+                        <div class="flex">
+                            <span class="font-bold w-32 text-slate-600">Roll Number:</span>
+                            <span class="font-mono font-bold text-slate-900" id="outRoll">--</span>
+                        </div>
+                        <div class="flex">
+                            <span class="font-bold w-32 text-slate-600">Father's Name:</span>
+                            <span class="text-slate-900" id="outFather">--</span>
+                        </div>
+                        <div class="flex">
+                            <span class="font-bold w-32 text-slate-600">Category:</span>
+                            <span class="text-slate-900" id="outCategory">General</span>
+                        </div>
+                    </div>
+
+                    <!-- Marks Table -->
+                    <table class="w-full mb-8 border-collapse border border-slate-300 text-sm relative z-10">
+                        <thead>
+                            <tr class="bg-slate-100">
+                                <th class="border border-slate-300 p-2 text-left">Subject</th>
+                                <th class="border border-slate-300 p-2 text-center w-24">Max Marks</th>
+                                <th class="border border-slate-300 p-2 text-center w-24">Obtained</th>
+                                <th class="border border-slate-300 p-2 text-center w-24">Percentile</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="border border-slate-300 p-2 font-medium">Physics</td>
+                                <td class="border border-slate-300 p-2 text-center text-slate-500">150</td>
+                                <td class="border border-slate-300 p-2 text-center font-bold" id="scorePhy">--</td>
+                                <td class="border border-slate-300 p-2 text-center" id="percPhy">--</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-300 p-2 font-medium">Chemistry</td>
+                                <td class="border border-slate-300 p-2 text-center text-slate-500">150</td>
+                                <td class="border border-slate-300 p-2 text-center font-bold" id="scoreChem">--</td>
+                                <td class="border border-slate-300 p-2 text-center" id="percChem">--</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-300 p-2 font-medium">Mathematics</td>
+                                <td class="border border-slate-300 p-2 text-center text-slate-500">150</td>
+                                <td class="border border-slate-300 p-2 text-center font-bold" id="scoreMath">--</td>
+                                <td class="border border-slate-300 p-2 text-center" id="percMath">--</td>
+                            </tr>
+                            <tr class="bg-slate-50">
+                                <td class="border border-slate-300 p-2 font-bold text-right">Grand Total</td>
+                                <td class="border border-slate-300 p-2 text-center font-bold text-slate-700">450</td>
+                                <td class="border border-slate-300 p-2 text-center font-bold text-blue-900 text-lg" id="scoreTotal">--</td>
+                                <td class="border border-slate-300 p-2 bg-slate-100"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Result Footer -->
+                    <div class="grid grid-cols-2 gap-4 mb-8 relative z-10">
+                        <div class="bg-slate-50 border border-slate-200 p-4 rounded text-center">
+                            <div class="text-xs text-slate-500 uppercase font-bold mb-1">All India Rank</div>
+                            <div class="text-2xl font-bold text-blue-600" id="outRank">--</div>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 p-4 rounded text-center">
+                            <div class="text-xs text-slate-500 uppercase font-bold mb-1">Result Status</div>
+                            <div class="text-xl font-bold text-green-600" id="outStatus">QUALIFIED</div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-end mt-12 relative z-10 no-print">
+                        <div class="text-xs text-slate-400">
+                            Generated on: <span id="printDate"></span><br>
+                            IP: 192.168.X.X
+                        </div>
+                        <div class="text-center">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iNDAiPjx0ZXh0IHg9IjEwIiB5PSIzMCIgZm9udC1mYW1pbHk9IkN1cnNpdmUiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiMwMDAiPkNvbnRyb2xsZXI8L3RleHQ+PC9zdmc+" class="h-10 mx-auto opacity-70" alt="Signature">
+                            <p class="text-xs font-bold border-t border-slate-400 pt-1 px-4">Controller of Examinations</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Print Actions -->
+                <div class="bg-slate-800 p-4 flex justify-between items-center text-white no-print">
+                    <button onclick="document.getElementById('marksheetCard').classList.add('hidden'); document.getElementById('searchCard').classList.remove('hidden');" class="hover:text-gray-300 text-sm">
+                        <i class="fas fa-arrow-left mr-1"></i> Back to Search
+                    </button>
+                    <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-sm font-bold shadow transition-colors">
+                        <i class="fas fa-print mr-2"></i> Print Result
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- MERIT LIST SECTION -->
+        <section id="meritSection" class="hidden max-w-5xl mx-auto">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-6 border-b border-slate-200 bg-slate-50 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div>
+                        <h2 class="font-bold text-xl text-slate-800">NUAT 2025 Merit List</h2>
+                        <p class="text-sm text-slate-500">Top Rankers (Out of 450 Marks)</p>
+                    </div>
+                    <div id="meritDateWarn" class="hidden text-xs bg-red-100 text-red-600 px-3 py-1 rounded-full font-bold">
+                        Coming Soon (04/12/25)
+                    </div>
+                </div>
+
+                <div id="meritContent" class="hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-slate-100 text-slate-600 uppercase text-xs font-bold">
+                                <tr>
+                                    <th class="px-6 py-4">Rank</th>
+                                    <th class="px-6 py-4">Roll No</th>
+                                    <th class="px-6 py-4">Candidate Name</th>
+                                    <th class="px-6 py-4">Category</th>
+                                    <th class="px-6 py-4 text-center">Score (450)</th>
+                                    <th class="px-6 py-4 text-right">Percentile</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100" id="meritTableBody">
+                                <!-- JS Populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="p-4 border-t border-slate-200 bg-slate-50 text-center text-xs text-slate-500">
+                        Showing top 10 candidates out of 15,420 appeared.
+                    </div>
+                </div>
+                
+                <div id="meritPlaceholder" class="p-12 text-center">
+                    <i class="fas fa-lock text-4xl text-slate-300 mb-4"></i>
+                    <h3 class="text-lg font-bold text-slate-700">Merit List Locked</h3>
+                    <p class="text-slate-500 mb-6">The merit list will be available for public viewing after 04/12/25 10:00 AM.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 text-sm mt-auto no-print">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-2">&copy; 2025 National University. All rights reserved.</p>
+            <p class="text-xs text-slate-600">Disclaimer: This website is a demo/simulation for educational purposes.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. MOCK DATA & CONFIGURATION ---
+        
+        // Simulation State
+        let simulatedDate = new Date("2025-11-28"); // Start at Nov 28
+        const RESULT_DATE = new Date("2025-12-04");
+
+        // Mock Database of Students
+        const students = [
+            { roll: "2500101", name: "Rahul Sharma", father: "Ramesh Sharma", dob: "2003-05-12", cat: "GEN", p: 145, c: 140, m: 148, total: 433, rank: 1 },
+            { roll: "2500102", name: "Priya Patel", father: "Suresh Patel", dob: "2003-08-22", cat: "OBC", p: 140, c: 142, m: 145, total: 427, rank: 2 },
+            { roll: "2500103", name: "Amit Kumar", father: "Mahesh Kumar", dob: "2002-11-05", cat: "SC", p: 138, c: 135, m: 140, total: 413, rank: 3 },
+            { roll: "2500104", name: "Sneha Gupta", father: "Rajiv Gupta", dob: "2003-02-14", cat: "GEN", p: 135, c: 138, m: 135, total: 408, rank: 4 },
+            { roll: "2500105", name: "Mohd. Ayan", father: "Zafar Ali", dob: "2003-07-30", cat: "OBC", p: 130, c: 132, m: 140, total: 402, rank: 5 },
+            { roll: "2500106", name: "David John", father: "Philip John", dob: "2003-01-15", cat: "GEN", p: 125, c: 130, m: 135, total: 390, rank: 6 },
+            { roll: "2500107", name: "Kavita Singh", father: "Vikram Singh", dob: "2003-09-09", cat: "EWS", p: 120, c: 125, m: 130, total: 375, rank: 7 },
+            { roll: "2500108", name: "Arjun Reddy", father: "Prasad Reddy", dob: "2002-12-01", cat: "GEN", p: 115, c: 120, m: 125, total: 360, rank: 8 },
+            { roll: "2500109", name: "Fatima Bi", father: "Ahmed Khan", dob: "2003-04-18", cat: "OBC", p: 110, c: 115, m: 120, total: 345, rank: 9 },
+            { roll: "2500110", name: "Gurpreet Singh", father: "Manjit Singh", dob: "2003-06-25", cat: "GEN", p: 105, c: 110, m: 115, total: 330, rank: 10 }
+        ];
+
+        // --- 2. CORE FUNCTIONS ---
+
+        function init() {
+            updateDateUI();
+            checkDateLogic();
+            populateMeritList();
+        }
+
+        // Toggle Simulation Time (Demo Control)
+        function toggleTimeJump() {
+            // Toggle between today and result day
+            if (simulatedDate.getMonth() === 10) { // If Nov
+                simulatedDate = new Date("2025-12-04"); // Jump to Result Day
+            } else {
+                simulatedDate = new Date("2025-11-28"); // Back to Nov
+            }
+            updateDateUI();
+            checkDateLogic();
+            
+            // If in result section, refresh view
+            if (!document.getElementById('resultSection').classList.contains('hidden')) {
+                // If results are now available, hide marksheet if open to avoid confusion, show form
+                document.getElementById('marksheetCard').classList.add('hidden');
+                document.getElementById('searchCard').classList.remove('hidden');
+            }
+        }
+
+        function updateDateUI() {
+            const dateStr = simulatedDate.toLocaleDateString('en-GB');
+            document.getElementById('displayDate').textContent = dateStr;
+            document.getElementById('printDate').textContent = dateStr;
+        }
+
+        function checkDateLogic() {
+            const isResultsOut = simulatedDate >= RESULT_DATE;
+            
+            // Update Banner
+            const bannerText = document.getElementById('statusText');
+            const banner = document.getElementById('statusBanner');
+            
+            if (isResultsOut) {
+                bannerText.innerHTML = "<strong>Results Declared!</strong> You can now check your scorecard and the merit list.";
+                banner.className = "mb-8 p-4 rounded-lg bg-green-50 border border-green-200 flex items-start gap-3";
+                banner.querySelector('i').className = "fas fa-check-circle text-green-600 mt-1";
+                
+                // Unblock features
+                document.getElementById('dateBlocker').classList.add('hidden');
+                document.getElementById('resultForm').classList.remove('hidden');
+                
+                document.getElementById('meritPlaceholder').classList.add('hidden');
+                document.getElementById('meritContent').classList.remove('hidden');
+                document.getElementById('meritDateWarn').classList.add('hidden');
+            } else {
+                bannerText.innerHTML = "Results are yet to be declared. Official Date: <strong>04/12/25</strong>";
+                banner.className = "mb-8 p-4 rounded-lg bg-blue-50 border border-blue-200 flex items-start gap-3";
+                banner.querySelector('i').className = "fas fa-info-circle text-blue-600 mt-1";
+                
+                // Block features
+                document.getElementById('dateBlocker').classList.remove('hidden');
+                document.getElementById('resultForm').classList.add('hidden');
+                
+                document.getElementById('meritPlaceholder').classList.remove('hidden');
+                document.getElementById('meritContent').classList.add('hidden');
+                document.getElementById('meritDateWarn').classList.remove('hidden');
+            }
+        }
+
+        // Navigation Logic
+        function showSection(sectionId) {
+            // Hide all
+            document.getElementById('homeSection').classList.add('hidden');
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('meritSection').classList.add('hidden');
+            
+            // Show selected
+            document.getElementById(sectionId + 'Section').classList.remove('hidden');
+        }
+
+        // Demo Helper
+        function autoFillDemo() {
+            document.getElementById('rollNo').value = "2500101";
+        }
+
+        // Handle Search
+        function handleResultSearch(e) {
+            e.preventDefault();
+            
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            const rollInput = document.getElementById('rollNo').value;
+
+            // Loading state
+            btnText.innerText = "Searching...";
+            btnSpinner.classList.remove('hidden');
+
+            setTimeout(() => {
+                // Find student
+                const student = students.find(s => s.roll === rollInput);
+                
+                if (student) {
+                    renderMarksheet(student);
+                    document.getElementById('searchCard').classList.add('hidden');
+                    document.getElementById('marksheetCard').classList.remove('hidden');
+                } else {
+                    alert("Roll Number not found in database! (Try 2500101 to 2500110 for demo)");
+                }
+
+                // Reset button
+                btnText.innerText = "Get Result";
+                btnSpinner.classList.add('hidden');
+            }, 800); // Fake delay
+        }
+
+        function renderMarksheet(data) {
+            document.getElementById('outName').innerText = data.name;
+            document.getElementById('outRoll').innerText = data.roll;
+            document.getElementById('outFather').innerText = data.father;
+            document.getElementById('outCategory').innerText = data.cat;
+            
+            document.getElementById('scorePhy').innerText = data.p;
+            document.getElementById('scoreChem').innerText = data.c;
+            document.getElementById('scoreMath').innerText = data.m;
+            document.getElementById('scoreTotal').innerText = data.total; // Out of 450
+            
+            // Fake percentiles
+            document.getElementById('percPhy').innerText = ((data.p/150)*100).toFixed(2);
+            document.getElementById('percChem').innerText = ((data.c/150)*100).toFixed(2);
+            document.getElementById('percMath').innerText = ((data.m/150)*100).toFixed(2);
+
+            document.getElementById('outRank').innerText = data.rank;
+            
+            // Pass/Fail Logic (Arbitrary 35% cutoff)
+            const isPassed = data.total >= (450 * 0.35);
+            const statusEl = document.getElementById('outStatus');
+            if(isPassed) {
+                statusEl.innerText = "QUALIFIED";
+                statusEl.className = "text-xl font-bold text-green-600";
+            } else {
+                statusEl.innerText = "NOT QUALIFIED";
+                statusEl.className = "text-xl font-bold text-red-600";
+            }
+        }
+
+        function populateMeritList() {
+            const tbody = document.getElementById('meritTableBody');
+            tbody.innerHTML = "";
+            
+            students.forEach((s) => {
+                // Calculate percentile (Fake formula relative to topper)
+                const percentile = ((s.total / 450) * 100).toFixed(2);
+                
+                const tr = `
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 font-bold text-slate-700">#${s.rank}</td>
+                        <td class="px-6 py-4 font-mono text-slate-500">${s.roll}</td>
+                        <td class="px-6 py-4 font-medium text-slate-900">${s.name}</td>
+                        <td class="px-6 py-4 text-slate-500">${s.cat}</td>
+                        <td class="px-6 py-4 text-center font-bold text-blue-700">${s.total}</td>
+                        <td class="px-6 py-4 text-right text-slate-600">${percentile}%</td>
+                    </tr>
+                `;
+                tbody.innerHTML += tr;
+            });
+        }
+
+        // Initialize App
+        init();
+
+    </script>
+</body>
+</html>

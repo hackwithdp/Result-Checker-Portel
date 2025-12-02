@@ -36,6 +36,23 @@
             white-space: nowrap;
         }
 
+        /* Official Stamp Style */
+        .stamp {
+            transform: rotate(-12deg);
+            color: #555;
+            font-size: 1rem;
+            font-weight: 700;
+            border: 3px solid #1e3a8a;
+            display: inline-block;
+            padding: 0.25rem 1rem;
+            text-transform: uppercase;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            mask-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC'); 
+            opacity: 0.8;
+            mix-blend-mode: multiply;
+        }
+
         /* Print specific styles */
         @media print {
             .no-print {
@@ -74,15 +91,15 @@
 <body class="min-h-screen flex flex-col text-slate-800">
 
     <!-- Admin/Demo Controls (For demonstration purposes) -->
-    <div class="bg-slate-900 text-white p-2 text-xs flex justify-between items-center no-print">
+    <div class="hidden bg-slate-900 text-white p-2 text-xs flex justify-between items-center no-print">
         <span><i class="fas fa-tools mr-2"></i>Developer Demo Panel</span>
         <div class="flex items-center gap-4">
             <label class="flex items-center cursor-pointer">
                 <span class="mr-2 text-gray-400">Current Date:</span>
-                <span id="displayDate" class="font-mono text-yellow-400 font-bold">28/11/25</span>
+                <span id="displayDate" class="font-mono text-yellow-400 font-bold">--</span>
             </label>
             <button onclick="toggleTimeJump()" class="bg-green-600 hover:bg-green-700 px-3 py-1 rounded transition-colors text-xs font-bold">
-                <i class="fas fa-clock mr-1"></i> Jump to Result Day (04/12/25)
+                <i class="fas fa-clock mr-1"></i> Toggle Date (Nov/Dec)
             </button>
         </div>
     </div>
@@ -102,7 +119,7 @@
                 </div>
                 <div class="text-right hidden md:block">
                     <p class="text-sm text-blue-200">Exam Date: <strong>01/12/2025</strong></p>
-                    <p class="text-sm text-blue-200">Result Date: <strong>04/12/2025</strong></p>
+                    <p class="text-sm text-blue-200">Result Date: <strong>03/12/2025</strong></p>
                 </div>
             </div>
         </div>
@@ -124,7 +141,7 @@
     <!-- News Ticker -->
     <div class="ticker-wrap border-b border-yellow-200">
         <div class="ticker text-yellow-900 py-2 text-sm font-semibold">
-            <span class="mx-4">IMPORTANT: NUAT 2025 Results scheduled for declaration on 04/12/2025.</span>
+            <span class="mx-4">IMPORTANT: NUAT 2025 Results DECLARED on 03/12/2025.</span>
             <span class="mx-4">•</span>
             <span class="mx-4">Please keep your Roll Number and Date of Birth ready.</span>
             <span class="mx-4">•</span>
@@ -142,7 +159,7 @@
             <i class="fas fa-info-circle text-blue-600 mt-1"></i>
             <div>
                 <h3 class="font-bold text-blue-900">Result Status</h3>
-                <p id="statusText" class="text-blue-800 text-sm">Results are yet to be declared. Please check back on 04/12/25.</p>
+                <p id="statusText" class="text-blue-800 text-sm">Results are yet to be declared. Please check back on 03/12/25.</p>
             </div>
         </div>
 
@@ -204,9 +221,9 @@
                             <i class="fas fa-clock"></i>
                         </div>
                         <h3 class="text-xl font-bold text-slate-800 mb-2">Results Not Yet Declared</h3>
-                        <p class="text-slate-500 mb-6">The result link will be activated on <strong>04/12/2025</strong>.</p>
+                        <p class="text-slate-500 mb-6">The result link will be activated on <strong>03/12/2025</strong>.</p>
                         <button onclick="toggleTimeJump()" class="text-blue-600 hover:underline text-sm font-medium">
-                            (Developer: Simulate Date to Dec 4th)
+                            (Developer: Simulate Date to Dec 3rd)
                         </button>
                     </div>
 
@@ -214,10 +231,10 @@
                     <form id="resultForm" class="hidden space-y-6" onsubmit="handleResultSearch(event)">
                         <div>
                             <label class="block text-sm font-medium text-slate-700 mb-1">Roll Number <span class="text-red-500">*</span></label>
-                            <input type="text" id="rollNo" placeholder="Ex: 2500123" required
+                            <input type="text" id="rollNo" placeholder="Ex: 250928" required
                                 class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                             >
-                            <p class="text-xs text-slate-500 mt-1">Enter the 7-digit roll number mentioned on your admit card.</p>
+                            <p class="text-xs text-slate-500 mt-1">Enter the 6-digit roll number mentioned on your admit card.</p>
                         </div>
                         
                         <div class="grid grid-cols-2 gap-4">
@@ -236,7 +253,7 @@
 
                         <div class="text-center">
                             <button type="button" onclick="autoFillDemo()" class="text-xs text-blue-500 hover:underline">
-                                Auto-fill Demo Data (Roll: 2500101)
+                                Auto-fill My Roll No (250928)
                             </button>
                         </div>
                     </form>
@@ -257,13 +274,16 @@
                             <div>
                                 <h1 class="font-bold text-2xl serif text-slate-900 uppercase">National University</h1>
                                 <p class="text-sm font-bold text-slate-600 uppercase tracking-widest">Entrance Test (NUAT) - 2025</p>
-                                <p class="text-xs text-slate-500 mt-1">Exam Date: 01/12/25 • Result Date: 04/12/25</p>
+                                <p class="text-xs text-slate-500 mt-1">Exam Date: 01/12/25 • Result Date: 03/12/25</p>
                             </div>
                         </div>
                         <div class="text-right">
-                            <div class="border border-slate-300 w-24 h-28 bg-slate-50 flex flex-col items-center justify-center text-slate-300 mb-1">
-                                <i class="fas fa-user text-3xl"></i>
-                                <span class="text-[10px] mt-1">Photo</span>
+                            <div class="border border-slate-300 w-24 h-28 bg-slate-50 flex flex-col items-center justify-center text-slate-300 mb-1 overflow-hidden">
+                                <img id="studentPhoto" src="" alt="Student Photo" class="w-full h-full object-cover hidden">
+                                <div id="photoPlaceholder" class="flex flex-col items-center justify-center h-full w-full">
+                                    <i class="fas fa-user text-3xl"></i>
+                                    <span class="text-[10px] mt-1">Photo</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -300,22 +320,34 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="border border-slate-300 p-2 font-medium">Physics</td>
-                                <td class="border border-slate-300 p-2 text-center text-slate-500">150</td>
-                                <td class="border border-slate-300 p-2 text-center font-bold" id="scorePhy">--</td>
-                                <td class="border border-slate-300 p-2 text-center" id="percPhy">--</td>
+                                <td class="border border-slate-300 p-2 font-medium">General Studies</td>
+                                <td class="border border-slate-300 p-2 text-center text-slate-500">90</td>
+                                <td class="border border-slate-300 p-2 text-center font-bold" id="scoreGS">--</td>
+                                <td class="border border-slate-300 p-2 text-center" id="percGS">--</td>
                             </tr>
                             <tr>
-                                <td class="border border-slate-300 p-2 font-medium">Chemistry</td>
-                                <td class="border border-slate-300 p-2 text-center text-slate-500">150</td>
-                                <td class="border border-slate-300 p-2 text-center font-bold" id="scoreChem">--</td>
-                                <td class="border border-slate-300 p-2 text-center" id="percChem">--</td>
+                                <td class="border border-slate-300 p-2 font-medium">English</td>
+                                <td class="border border-slate-300 p-2 text-center text-slate-500">90</td>
+                                <td class="border border-slate-300 p-2 text-center font-bold" id="scoreEng">--</td>
+                                <td class="border border-slate-300 p-2 text-center" id="percEng">--</td>
                             </tr>
                             <tr>
                                 <td class="border border-slate-300 p-2 font-medium">Mathematics</td>
-                                <td class="border border-slate-300 p-2 text-center text-slate-500">150</td>
+                                <td class="border border-slate-300 p-2 text-center text-slate-500">90</td>
                                 <td class="border border-slate-300 p-2 text-center font-bold" id="scoreMath">--</td>
                                 <td class="border border-slate-300 p-2 text-center" id="percMath">--</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-300 p-2 font-medium">Logical Reasoning</td>
+                                <td class="border border-slate-300 p-2 text-center text-slate-500">90</td>
+                                <td class="border border-slate-300 p-2 text-center font-bold" id="scoreLR">--</td>
+                                <td class="border border-slate-300 p-2 text-center" id="percLR">--</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-300 p-2 font-medium">Science</td>
+                                <td class="border border-slate-300 p-2 text-center text-slate-500">90</td>
+                                <td class="border border-slate-300 p-2 text-center font-bold" id="scoreSci">--</td>
+                                <td class="border border-slate-300 p-2 text-center" id="percSci">--</td>
                             </tr>
                             <tr class="bg-slate-50">
                                 <td class="border border-slate-300 p-2 font-bold text-right">Grand Total</td>
@@ -341,10 +373,28 @@
                     <div class="flex justify-between items-end mt-12 relative z-10 no-print">
                         <div class="text-xs text-slate-400">
                             Generated on: <span id="printDate"></span><br>
-                            IP: 192.168.X.X
+                            IP: 192.168.12.114
                         </div>
-                        <div class="text-center">
-                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iNDAiPjx0ZXh0IHg9IjEwIiB5PSIzMCIgZm9udC1mYW1pbHk9IkN1cnNpdmUiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiMwMDAiPkNvbnRyb2xsZXI8L3RleHQ+PC9zdmc+" class="h-10 mx-auto opacity-70" alt="Signature">
+                        <div class="text-center relative">
+                            <!-- Official Stamp SVG -->
+                            <div class="absolute -top-16 -left-10 opacity-80 pointer-events-none transform -rotate-12">
+                                <svg width="150" height="150" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <path id="circlePath" d="M 100, 100 m -75, 0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0" />
+                                    </defs>
+                                    <circle cx="100" cy="100" r="95" fill="none" stroke="#1e3a8a" stroke-width="4" />
+                                    <circle cx="100" cy="100" r="70" fill="none" stroke="#1e3a8a" stroke-width="2" />
+                                    <text fill="#1e3a8a" font-family="serif" font-weight="bold" font-size="14">
+                                        <textPath href="#circlePath" startOffset="50%" text-anchor="middle">
+                                            NATIONAL UNIVERSITY • EXAMINATION BRANCH •
+                                        </textPath>
+                                    </text>
+                                    <text x="100" y="105" text-anchor="middle" fill="#1e3a8a" font-family="serif" font-weight="bold" font-size="18">OFFICIAL</text>
+                                    <text x="100" y="125" text-anchor="middle" fill="#1e3a8a" font-family="serif" font-weight="bold" font-size="18">SEAL</text>
+                                </svg>
+                            </div>
+
+                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iNDAiPjx0ZXh0IHg9IjEwIiB5PSIzMCIgZm9udC1mYW1pbHk9IkN1cnNpdmUiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiMwMDAiPkNvbnRyb2xsZXI8L3RleHQ+PC9zdmc+" class="h-10 mx-auto opacity-70 relative z-10" alt="Signature">
                             <p class="text-xs font-bold border-t border-slate-400 pt-1 px-4">Controller of Examinations</p>
                         </div>
                     </div>
@@ -371,7 +421,7 @@
                         <p class="text-sm text-slate-500">Top Rankers (Out of 450 Marks)</p>
                     </div>
                     <div id="meritDateWarn" class="hidden text-xs bg-red-100 text-red-600 px-3 py-1 rounded-full font-bold">
-                        Coming Soon (04/12/25)
+                        Coming Soon (03/12/25)
                     </div>
                 </div>
 
@@ -393,15 +443,24 @@
                             </tbody>
                         </table>
                     </div>
+                    
+                    <!-- Show More Button -->
+                    <div class="bg-white p-4 text-center border-t border-slate-100">
+                        <button onclick="showMoreMerit()" id="showMoreBtn" class="bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold py-2 px-6 rounded-full text-sm transition-colors border border-blue-200">
+                            Show More Candidates
+                        </button>
+                        <p class="text-xs text-slate-400 mt-2" id="showingCountText"></p>
+                    </div>
+
                     <div class="p-4 border-t border-slate-200 bg-slate-50 text-center text-xs text-slate-500">
-                        Showing top 10 candidates out of 15,420 appeared.
+                        Showing top candidates out of 142,788 appeared.
                     </div>
                 </div>
                 
                 <div id="meritPlaceholder" class="p-12 text-center">
                     <i class="fas fa-lock text-4xl text-slate-300 mb-4"></i>
                     <h3 class="text-lg font-bold text-slate-700">Merit List Locked</h3>
-                    <p class="text-slate-500 mb-6">The merit list will be available for public viewing after 04/12/25 10:00 AM.</p>
+                    <p class="text-slate-500 mb-6">The merit list will be available for public viewing after 03/12/25 10:00 AM.</p>
                 </div>
             </div>
         </section>
@@ -419,27 +478,83 @@
     <script>
         // --- 1. MOCK DATA & CONFIGURATION ---
         
-        // Simulation State
-        let simulatedDate = new Date("2025-11-28"); // Start at Nov 28
-        const RESULT_DATE = new Date("2025-12-04");
+        // Simulation State: STARTED ON RESULT DAY
+        let simulatedDate = new Date("2025-12-03"); 
+        const RESULT_DATE = new Date("2025-12-03");
+        let meritLimit = 20; // Initial number of rows to show
 
         // Mock Database of Students
+        // Note: Top scores slightly increased to make Rank 158 with 416 marks consistent
         const students = [
-            { roll: "2500101", name: "Rahul Sharma", father: "Ramesh Sharma", dob: "2003-05-12", cat: "GEN", p: 145, c: 140, m: 148, total: 433, rank: 1 },
-            { roll: "2500102", name: "Priya Patel", father: "Suresh Patel", dob: "2003-08-22", cat: "OBC", p: 140, c: 142, m: 145, total: 427, rank: 2 },
-            { roll: "2500103", name: "Amit Kumar", father: "Mahesh Kumar", dob: "2002-11-05", cat: "SC", p: 138, c: 135, m: 140, total: 413, rank: 3 },
-            { roll: "2500104", name: "Sneha Gupta", father: "Rajiv Gupta", dob: "2003-02-14", cat: "GEN", p: 135, c: 138, m: 135, total: 408, rank: 4 },
-            { roll: "2500105", name: "Mohd. Ayan", father: "Zafar Ali", dob: "2003-07-30", cat: "OBC", p: 130, c: 132, m: 140, total: 402, rank: 5 },
-            { roll: "2500106", name: "David John", father: "Philip John", dob: "2003-01-15", cat: "GEN", p: 125, c: 130, m: 135, total: 390, rank: 6 },
-            { roll: "2500107", name: "Kavita Singh", father: "Vikram Singh", dob: "2003-09-09", cat: "EWS", p: 120, c: 125, m: 130, total: 375, rank: 7 },
-            { roll: "2500108", name: "Arjun Reddy", father: "Prasad Reddy", dob: "2002-12-01", cat: "GEN", p: 115, c: 120, m: 125, total: 360, rank: 8 },
-            { roll: "2500109", name: "Fatima Bi", father: "Ahmed Khan", dob: "2003-04-18", cat: "OBC", p: 110, c: 115, m: 120, total: 345, rank: 9 },
-            { roll: "2500110", name: "Gurpreet Singh", father: "Manjit Singh", dob: "2003-06-25", cat: "GEN", p: 105, c: 110, m: 115, total: 330, rank: 10 }
+            { roll: "2500101", name: "Rahul Sharma", father: "Ramesh Sharma", dob: "2003-05-12", cat: "GEN", gs: 89, eng: 90, math: 90, lr: 88, sci: 89, total: 446, rank: 1 },
+            { roll: "2500102", name: "Priya Patel", father: "Suresh Patel", dob: "2003-08-22", cat: "GEN", gs: 88, eng: 89, math: 89, lr: 87, sci: 88, total: 441, rank: 2 },
+            { roll: "2500103", name: "Amit Kumar", father: "Mahesh Kumar", dob: "2002-11-05", cat: "SC", gs: 87, eng: 88, math: 88, lr: 86, sci: 87, total: 436, rank: 3 },
+            { roll: "2500104", name: "Sneha Gupta", father: "Rajiv Gupta", dob: "2003-02-14", cat: "GEN", gs: 86, eng: 87, math: 87, lr: 85, sci: 86, total: 431, rank: 4 },
+            { roll: "2500105", name: "Mohd. Ayan", father: "Zafar Ali", dob: "2003-07-30", cat: "OBC", gs: 85, eng: 86, math: 86, lr: 84, sci: 85, total: 426, rank: 5 },
+            { roll: "2500106", name: "Patel Sai", father: "Philip John", dob: "2003-01-15", cat: "GEN", gs: 84, eng: 85, math: 85, lr: 83, sci: 84, total: 421, rank: 6 },
+            { roll: "2500107", name: "Kavita Singh", father: "Vikram Singh", dob: "2003-09-09", cat: "EWS", gs: 83, eng: 84, math: 84, lr: 82, sci: 83, total: 419, rank: 7 },
+            
+            // YOUR ENTRY: Rank 158, Name "Patel Gautam", 416/450
+            { 
+                roll: "250928", 
+                name: "Patel Gautam", 
+                father: "Kalidasbhai Patel", 
+                dob: "2003-01-01", 
+                cat: "GEN", 
+                gs: 85, eng: 82, math: 88, lr: 86, sci: 75, 
+                total: 416, 
+                rank: 158 
+            },
         ];
 
-        // --- 2. CORE FUNCTIONS ---
+        // --- 2. GENERATE MOCK DATA TO FILL RANKS ---
+        function generateMockStudents() {
+            const firstNames = ["Aarav", "Vivaan", "Aditya", "Vihaan", "Arjun", "Sai", "Reyansh", "Ayan", "Krishna", "Ishaan", "Diya", "Saanvi", "Ananya", "Aadhya", "Pari", "Saanvi", "Myra", "Riya", "Anya", "Rohan", "Vikram", "Suresh", "Manish", "Pooja", "Neha"];
+            const lastNames = ["Kumar", "Singh", "Patel", "Sharma", "Gupta", "Reddy", "Yadav", "Das", "Verma", "Mehta", "Shah", "Joshi", "Nair", "Malhotra", "Bhat"];
+            const categories = ["GEN", "OBC", "SC", "ST", "EWS"];
 
+            // 1. Fill Ranks 8 to 157 (Scores between 419 and 416)
+            // This is a tight squeeze, so marks will repeat often
+            for(let r = 8; r < 158; r++) {
+                const fName = firstNames[Math.floor(Math.random() * firstNames.length)];
+                const lName = lastNames[Math.floor(Math.random() * lastNames.length)];
+                const roll = 2500110 + r;
+                
+                // Score between 419 and 417
+                const score = Math.floor(Math.random() * (419 - 417 + 1)) + 417;
+
+                students.push({
+                    roll: roll.toString(),
+                    name: fName + " " + lName,
+                    cat: categories[Math.floor(Math.random() * categories.length)],
+                    total: score,
+                    rank: r
+                });
+            }
+
+            // 2. Fill Ranks 159 to 250 (Scores < 416)
+            for(let r = 159; r <= 250; r++) {
+                const fName = firstNames[Math.floor(Math.random() * firstNames.length)];
+                const lName = lastNames[Math.floor(Math.random() * lastNames.length)];
+                const roll = 2500300 + r;
+                
+                // Score decaying from 415 downwards
+                const score = 415 - Math.floor((r - 159) / 3); 
+
+                students.push({
+                    roll: roll.toString(),
+                    name: fName + " " + lName,
+                    cat: categories[Math.floor(Math.random() * categories.length)],
+                    total: score,
+                    rank: r
+                });
+            }
+        }
+
+        // --- 3. CORE FUNCTIONS ---
+        
         function init() {
+            generateMockStudents();
             updateDateUI();
             checkDateLogic();
             populateMeritList();
@@ -449,7 +564,7 @@
         function toggleTimeJump() {
             // Toggle between today and result day
             if (simulatedDate.getMonth() === 10) { // If Nov
-                simulatedDate = new Date("2025-12-04"); // Jump to Result Day
+                simulatedDate = new Date("2025-12-03"); // Jump to Result Day
             } else {
                 simulatedDate = new Date("2025-11-28"); // Back to Nov
             }
@@ -490,7 +605,7 @@
                 document.getElementById('meritContent').classList.remove('hidden');
                 document.getElementById('meritDateWarn').classList.add('hidden');
             } else {
-                bannerText.innerHTML = "Results are yet to be declared. Official Date: <strong>04/12/25</strong>";
+                bannerText.innerHTML = "Results are yet to be declared. Official Date: <strong>03/12/25</strong>";
                 banner.className = "mb-8 p-4 rounded-lg bg-blue-50 border border-blue-200 flex items-start gap-3";
                 banner.querySelector('i').className = "fas fa-info-circle text-blue-600 mt-1";
                 
@@ -517,7 +632,7 @@
 
         // Demo Helper
         function autoFillDemo() {
-            document.getElementById('rollNo').value = "2500101";
+            document.getElementById('rollNo').value = "250928";
         }
 
         // Handle Search
@@ -541,7 +656,7 @@
                     document.getElementById('searchCard').classList.add('hidden');
                     document.getElementById('marksheetCard').classList.remove('hidden');
                 } else {
-                    alert("Roll Number not found in database! (Try 2500101 to 2500110 for demo)");
+                    alert("Roll Number not found in database! (Try 250928 for demo)");
                 }
 
                 // Reset button
@@ -556,19 +671,45 @@
             document.getElementById('outFather').innerText = data.father;
             document.getElementById('outCategory').innerText = data.cat;
             
-            document.getElementById('scorePhy').innerText = data.p;
-            document.getElementById('scoreChem').innerText = data.c;
-            document.getElementById('scoreMath').innerText = data.m;
+            // Student Photo Logic
+            const photoImg = document.getElementById('studentPhoto');
+            const photoPlaceholder = document.getElementById('photoPlaceholder');
+
+            if (data.name === "Patel Gautam") {
+                photoImg.src = "https://blogger.googleusercontent.com/img/a/AVvXsEiAyyMUvl3ViYbohuWyx1MiBydZ4xzZJxKky683iiWQhfAt9t3KOXcBf5mzwwjk2fpVhn3fG22Ksj8JKfkZX9mmhDKzPIDUX-CXLOAV0C3YzC0ji-Tfe6Mf7wmtmxB35hvc3tqeazpgO7z2vxJ6i6HUwNlziT2MEPyY7_ANFiskF462-bq2PWgf7JDQuw";
+                photoImg.classList.remove('hidden');
+                photoPlaceholder.classList.add('hidden');
+            } else {
+                photoImg.src = "";
+                photoImg.classList.add('hidden');
+                photoPlaceholder.classList.remove('hidden');
+            }
+
+            // Populate Subjects (Max 90 each)
+            document.getElementById('scoreGS').innerText = data.gs || 80;
+            document.getElementById('scoreEng').innerText = data.eng || 80;
+            document.getElementById('scoreMath').innerText = data.math || 80;
+            document.getElementById('scoreLR').innerText = data.lr || 80;
+            document.getElementById('scoreSci').innerText = data.sci || 80;
+            
             document.getElementById('scoreTotal').innerText = data.total; // Out of 450
             
-            // Fake percentiles
-            document.getElementById('percPhy').innerText = ((data.p/150)*100).toFixed(2);
-            document.getElementById('percChem').innerText = ((data.c/150)*100).toFixed(2);
-            document.getElementById('percMath').innerText = ((data.m/150)*100).toFixed(2);
+            // Fake percentiles (Score / 90 * 100)
+            const gs = data.gs || 80;
+            const eng = data.eng || 80;
+            const math = data.math || 80;
+            const lr = data.lr || 80;
+            const sci = data.sci || 80;
+
+            document.getElementById('percGS').innerText = ((gs/90)*100).toFixed(2);
+            document.getElementById('percEng').innerText = ((eng/90)*100).toFixed(2);
+            document.getElementById('percMath').innerText = ((math/90)*100).toFixed(2);
+            document.getElementById('percLR').innerText = ((lr/90)*100).toFixed(2);
+            document.getElementById('percSci').innerText = ((sci/90)*100).toFixed(2);
 
             document.getElementById('outRank').innerText = data.rank;
             
-            // Pass/Fail Logic (Arbitrary 35% cutoff)
+            // Pass/Fail Logic (Arbitrary 35% cutoff = 157.5)
             const isPassed = data.total >= (450 * 0.35);
             const statusEl = document.getElementById('outStatus');
             if(isPassed) {
@@ -580,26 +721,50 @@
             }
         }
 
+        function showMoreMerit() {
+            meritLimit += 50;
+            populateMeritList();
+        }
+
         function populateMeritList() {
             const tbody = document.getElementById('meritTableBody');
             tbody.innerHTML = "";
             
-            students.forEach((s) => {
-                // Calculate percentile (Fake formula relative to topper)
-                const percentile = ((s.total / 450) * 100).toFixed(2);
+            // Ensure array is sorted by rank
+            students.sort((a,b) => a.rank - b.rank);
+            
+            // Slice based on limit
+            const visibleStudents = students.slice(0, meritLimit);
+
+            visibleStudents.forEach((s) => {
+                // Calculate percentage based on 450 marks
+                const percentage = ((s.total / 450) * 100).toFixed(2);
                 
+                // Highlight the user entry by Roll No (250928)
+                const isUser = s.roll === "250928";
+                const rowClass = isUser ? "bg-blue-50 border-l-4 border-blue-500" : "hover:bg-slate-50 transition-colors";
+                const textClass = isUser ? "text-blue-900 font-bold" : "text-slate-900 font-medium";
+
                 const tr = `
-                    <tr class="hover:bg-slate-50 transition-colors">
+                    <tr class="${rowClass}">
                         <td class="px-6 py-4 font-bold text-slate-700">#${s.rank}</td>
                         <td class="px-6 py-4 font-mono text-slate-500">${s.roll}</td>
-                        <td class="px-6 py-4 font-medium text-slate-900">${s.name}</td>
+                        <td class="px-6 py-4 ${textClass}">${s.name}</td>
                         <td class="px-6 py-4 text-slate-500">${s.cat}</td>
                         <td class="px-6 py-4 text-center font-bold text-blue-700">${s.total}</td>
-                        <td class="px-6 py-4 text-right text-slate-600">${percentile}%</td>
+                        <td class="px-6 py-4 text-right text-slate-600">${percentage}%</td>
                     </tr>
                 `;
                 tbody.innerHTML += tr;
             });
+
+            // Update footer text
+            document.getElementById('showingCountText').innerText = `Showing ${visibleStudents.length} of ${students.length} loaded records`;
+            
+            // Hide button if all shown
+            if (meritLimit >= students.length) {
+                document.getElementById('showMoreBtn').classList.add('hidden');
+            }
         }
 
         // Initialize App
